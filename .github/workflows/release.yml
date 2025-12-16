@@ -28,7 +28,7 @@ jobs:
 
       - name: Build EXE (PyInstaller)
         run: |
-          pyinstaller --onefile --console src/main.py --name YTYP_DataFile_Generator
+          pyinstaller --onefile --console main.py --name YTYP_DataFile_Generator
 
       - name: Compute SHA256
         run: |
