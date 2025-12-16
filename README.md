@@ -5,7 +5,7 @@ A small utility to generate FiveM
 
 This repository contains:
 - the source code
-- a drag & drop Windows executable
+- a drag & drop Windows executable (release)
 - detailed documentation in English and French
 
 ---
