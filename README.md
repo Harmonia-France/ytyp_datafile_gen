@@ -35,13 +35,11 @@ Choose your language:
 
 ```text
 .
-├─ src/
-│  └─ ytyp_datafile_gen.py
+├─ main.py
 ├─ README.md
 ├─ README_EN.md
 ├─ README_FR.md
-├─ LICENSE
-└─ SECURITY.md
+└─ LICENSE
 ```
 
 ---
