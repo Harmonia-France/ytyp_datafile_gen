@@ -1,6 +1,6 @@
 # 🚀 YTYP DataFile Generator
 
-Un utilitaire léger permettant de générer automatiquement les déclarations FiveM  
+Un utilitaire léger permettant de générer automatiquement les déclarations FiveM
 `data_file 'DLC_ITYP_REQUEST'` à partir d’un dossier contenant des fichiers `.ytyp`.
 
 Conçu pour une utilisation **glisser-déposer** et une **intégration FiveM propre**.
@@ -12,64 +12,97 @@ Conçu pour une utilisation **glisser-déposer** et une **intégration FiveM pro
 - Scan récursif de tous les fichiers `.ytyp`
 - Préfixe automatique `stream/`
 - Sortie Lua propre, prête pour `fxmanifest.lua`
-- Compatible glisser-déposer (EXE)
-- Aucune configuration requise
+- Drag & drop compatible (EXE)
+- Zéro configuration
 
 ---
 
-## 📤 Exemple de sortie
+## ⚙️ Comportement exact (par fichier)
+
+Pour chaque fichier `.ytyp` trouvé, le script applique la règle suivante :
+
+- Si le fichier est directement dans le dossier racine fourni (c.-à-d. `f.parent == root`), on écrit :
+
+```lua
+data_file 'DLC_ITYP_REQUEST' 'stream/<resource_name>/<filename>.ytyp'
+```
+
+Exemple : `my_resource/a.ytyp` → `stream/my_resource/a.ytyp`.
+
+- Sinon (le fichier est dans un sous-dossier), on écrit le chemin relatif complet préfixé par `stream/` :
+
+```lua
+data_file 'DLC_ITYP_REQUEST' 'stream/interiors/school/school.ytyp'
+```
+
+Remarques :
+
+- Il n’y a pas d’agrégation wildcard globale (pas de `stream/<resource>/*`).
+- Les lignes identiques sont dédupliquées pour éviter les doublons.
+- Les fichiers sont triés (ordre alphabétique insensible à la casse).
+
+---
+
+## 🧾 Exemples
+
+Cas sans sous-dossiers (tous les `.ytyp` à la racine) :
+
+```lua
+data_file 'DLC_ITYP_REQUEST' 'stream/my_resource/a.ytyp'
+data_file 'DLC_ITYP_REQUEST' 'stream/my_resource/b.ytyp'
+```
+
+Cas avec sous-dossiers :
 
 ```lua
 data_file 'DLC_ITYP_REQUEST' 'stream/interiors/school/school.ytyp'
 data_file 'DLC_ITYP_REQUEST' 'stream/props/chairs/chair_set.ytyp'
 ```
 
+Cas mixte (2 à la racine + 3 en sous-dossiers) :
+
+```lua
+data_file 'DLC_ITYP_REQUEST' 'stream/my_resource/a.ytyp'
+data_file 'DLC_ITYP_REQUEST' 'stream/my_resource/b.ytyp'
+data_file 'DLC_ITYP_REQUEST' 'stream/interiors/school.ytyp'
+data_file 'DLC_ITYP_REQUEST' 'stream/props/chair_set.ytyp'
+data_file 'DLC_ITYP_REQUEST' 'stream/props/table_set.ytyp'
+```
+
 ---
 
-## 🧲 Utilisation (version EXE)
+## 🛠️ Utilisation rapide (EXE)
 
 1. Lance `YTYP_DataFile_Generator.exe`
 2. Glisse-dépose ton dossier de ressource FiveM sur l’exécutable
-3. Un fichier nommé `ytyp_datafiles.lua` est généré dans le dossier déposé
+3. Un fichier `ytyp_datafiles.lua` est généré dans le dossier déposé
 
-> Aucun setup. Aucune configuration. Tu déposes, ça génère.
+> Le fichier est remplacé à chaque exécution.
 
 ---
 
-## 📁 Structure attendue
+## 🔎 Test rapide (PowerShell)
 
-```text
-my_resource/
-├─ stream/
-│  ├─ interiors/
-│  │  └─ my_interior.ytyp
-│  └─ props/
-│     └─ my_props.ytyp
+Pour reproduire localement :
+
+```powershell
+# créer structure de test
+Remove-Item -Recurse -Force .\test_mix -ErrorAction SilentlyContinue
+New-Item -ItemType Directory -Path .\test_mix | Out-Null
+New-Item -Path .\test_mix\a.ytyp -ItemType File | Out-Null
+New-Item -Path .\test_mix\b.ytyp -ItemType File | Out-Null
+New-Item -ItemType Directory -Path .\test_mix\stream\interiors -Force | Out-Null
+New-Item -Path .\test_mix\stream\interiors\c.ytyp -ItemType File | Out-Null
+# lancer
+python .\main.py .\test_mix
+Get-Content .\test_mix\ytyp_datafiles.lua -Raw
 ```
 
 ---
 
-## 📦 Fichier généré
+## 🔗 Intégration FiveM
 
-```text
-my_resource/
-├─ ytyp_datafiles.lua
-```
-
----
-
-## ⚠️ Notes
-
-- Seuls les fichiers `.ytyp` sont pris en compte
-- Les sous-dossiers sont entièrement supportés
-- Les chemins utilisent toujours des `/`
-- L’outil peut être relancé sans risque (fichier remplacé)
-
----
-
-## 🔗 Rappel d’intégration FiveM
-
-Ne pas oublier d’inclure le fichier généré dans le `fxmanifest.lua` :
+Inclure le fichier généré dans le `fxmanifest.lua` :
 
 ```lua
 files {
@@ -79,7 +112,4 @@ files {
 
 ---
 
-## 👤 Auteur
-
-**Harmonia Tools**  
-Pensé pour un développement FiveM propre, rapide et sans prise de tête
+**Harmonia Tools** — outils pour le développement FiveM
