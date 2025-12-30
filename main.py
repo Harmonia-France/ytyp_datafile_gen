@@ -30,9 +30,11 @@ def main() -> int:
         else:
             stream_path = to_stream_rel(root, f)
             line = f"data_file 'DLC_ITYP_REQUEST' '{stream_path}'"
-        if line not in seen:
-            lines.append(line)
-            seen.add(line)
+        if line in seen:
+            print(f"Avertissement: ligne de data_file dupliquée pour \"{f}\": {line}")
+            continue
+        lines.append(line)
+        seen.add(line)
 
     out_file = root / "ytyp_datafiles.lua"
     out_file.write_text("\n".join(lines)+("\n" if lines else ""), encoding="utf-8")
