@@ -22,9 +22,19 @@ def main() -> int:
     ytyps = sorted(root.rglob("*.ytyp"), key=lambda p: p.as_posix().lower())
 
     lines = []
+    seen = set()
+
     for f in ytyps:
-        stream_path = to_stream_rel(root, f)
-        lines.append(f"data_file 'DLC_ITYP_REQUEST' '{stream_path}'")
+        if f.parent == root:
+            line = f"data_file 'DLC_ITYP_REQUEST' 'stream/{root.name}/{f.name}'"
+        else:
+            stream_path = to_stream_rel(root, f)
+            line = f"data_file 'DLC_ITYP_REQUEST' '{stream_path}'"
+        if line in seen:
+            print(f"Avertissement: ligne de data_file dupliquée pour \"{f}\": {line}")
+            continue
+        lines.append(line)
+        seen.add(line)
 
     out_file = root / "ytyp_datafiles.lua"
     out_file.write_text("\n".join(lines)+("\n" if lines else ""), encoding="utf-8")

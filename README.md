@@ -1,55 +1,44 @@
 # YTYP DataFile Generator
 
-A small utility to generate FiveM  
+A small utility to generate FiveM
 `data_file 'DLC_ITYP_REQUEST'` entries from `.ytyp` files.
 
 This repository contains:
 - the source code
 - a drag & drop Windows executable (release)
-- detailed documentation in English and French
+- documentation in English and French
 
 ---
 
-## 📘 Documentation
+## 📚 Documentation
 
 Choose your language:
 
-- 🇬🇧 **English documentation**  
-  → [README_EN.md](./README_EN.md)
-
-- 🇫🇷 **Documentation française**  
-  → [README_FR.md](./README_FR.md)
+- 🇬🇧 English documentation → [README_EN.md](./README_EN.md)
+- 🇫🇷 Documentation française → [README_FR.md](./README_FR.md)
 
 ---
 
-## 🔧 What this tool does (short version)
+## ⚙️ Behavior summary (exact)
 
-- Recursively scans a folder for `.ytyp` files
-- Generates a `ytyp_datafiles.lua` file
-- Automatically prefixes paths with `stream/`
-- Ready to be included in `fxmanifest.lua`
-
----
-
-## 📦 Project structure (simplified)
-
-```text
-.
-├─ main.py
-├─ README.md
-├─ README_EN.md
-├─ README_FR.md
-└─ LICENSE
-```
+- The script applies a per-file rule:
+  - If a `.ytyp` is directly under the provided root, emit `data_file 'DLC_ITYP_REQUEST' 'stream/<resource>/<filename>.ytyp'`.
+  - Otherwise emit the per-file relative path prefixed by `stream/`.
+- No wildcard aggregation is performed.
+- Lines are deduplicated and files are sorted.
 
 ---
 
-## 🧾 License
+## 🛠️ Quick usage
 
-This project is licensed under the **MIT License**.  
-See [LICENSE](./LICENSE) for details.
+Run the script or use the EXE and drop your resource folder onto it. The generated `ytyp_datafiles.lua` should be included in your `fxmanifest.lua`.
 
 ---
 
-**Harmonia Tools**  
-Clean tooling for FiveM development
+## ⚖️ License
+
+This project is licensed under the **MIT License**. See [LICENSE](./LICENSE) for details.
+
+---
+
+**Harmonia Tools** — Clean tooling for FiveM development
