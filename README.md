@@ -19,7 +19,7 @@ Choose your language:
 
 ---
 
-## ⚙️ Behaviour summary (exact)
+## ⚙️ Behavior summary (exact)
 
 - The script applies a per-file rule:
   - If a `.ytyp` is directly under the provided root, emit `data_file 'DLC_ITYP_REQUEST' 'stream/<resource>/<filename>.ytyp'`.
