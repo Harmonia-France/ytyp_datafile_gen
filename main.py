@@ -25,7 +25,7 @@ def main() -> int:
     seen = set()
 
     for f in ytyps:
-        if f.parent.resolve() == root:
+        if f.parent == root:
             line = f"data_file 'DLC_ITYP_REQUEST' 'stream/{root.name}/{f.name}'"
         else:
             stream_path = to_stream_rel(root, f)
